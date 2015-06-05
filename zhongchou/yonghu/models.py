@@ -30,7 +30,7 @@ class Chanpin(models.Model):
     hasSale = models.FloatField()
     CreateTime = models.DateTimeField(default=datetime.datetime.now)
     DueTime = models.DateTimeField()
-class pinglun(models.Model):
+class Pinglun(models.Model):
     PingLunID = models.AutoField(primary_key=True)
     UserID = models.IntegerField(max_length=15)
     ChanPinID = models.IntegerField(max_length=15)

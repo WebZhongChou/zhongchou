@@ -22,7 +22,7 @@
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                            <form  action="/denglu" autocomplete="on">
+                            <form  action="/denglu" autocomplete="on" method="get">
                                 <h1>登陆</h1> 
                                 <p> 
                                     <label for="username" class="uname" data-icon="u" >用户名</label>
@@ -47,7 +47,7 @@
                         </div>
 
                         <div id="register" class="animate form">
-                            <form  action="/zhuce" autocomplete="on">
+                            <form  action="/zhuce" autocomplete="on" method="get">
                                 <h1> 注册 </h1> 
                                 <p> 
                                     <label for="usernamesignup" class="uname" data-icon="u">你的用户名</label>
@@ -135,124 +135,37 @@
 		<div class="leave_main">
 			<div class="pinglun">
 				<div class="pinglun_head">
-					<div class="pz">评论（68）</div>
+					<div class="pz">评论{{ commentNum }}</div>
 				</div>
 				<div class="pinglun_main">
 					<div class="pinglun_p pp">
-                        <form action="form_action.asp" method="get">
-						<textarea class="ptext"></textarea>
-						<a href="/comment" class="aa"><span class="bb">发表回复</span></a>
+                        <form id = "test" action="/comment" method="get">
+						<textarea class="ptext" name="content" form="test"></textarea>
+                            <input type="hidden" name="chanpinID" value="{{ chanpinID }}"/>
+						<a href="" class="aa"><span class="bb">发表回复</span></a>
                              <input type="submit" value="发表回复" />
                         </form>
 					</div>
 					<br/>
+                    {% for pinglun in pinglunList %}
 					<div class="pinglun_p">
 						<div class="pinglun_n">
-							<img src="images/4.jpg" class="ntouxiang"/>
+
 						<div class="nr">
-							<p class="nname">悠然帅哥</p>
-							<p class="nneir">大家好</p>
+							<p class="nname">{{ pinglun.username }}</p>
+                            {{ pinglun.time }}
+							<p class="nneir">{{ pinglun.content }}</p>
 							</div>
 						</div>
 					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">. 爱美丽，爱健康，希望生活变得更有情趣的，请看下我的项目。项目成功了，还有几天就要结束了，原价399元。活动价只要298元，需要的可以点击链接看下，谢谢！www.zhongchou.com/deal-show/id-113083。同时支持过的，请添加微信 DIY-Sex，，，，，方便给大家提供售后服务。谢谢！！！！</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
-					<div class="pinglun_p">
-						<div class="pinglun_n">
-							<img src="images/id18.jpg" class="ntouxiang"/>
-						<div class="nr">
-							<p class="nname">hehe</p>
-							<p class="nneir">http://www.zhongchou.cn/deal-topic/id-119008#maodian 具有性价比的扫地机器人 粉丝们希望能得到大家肯定与坚持。谢谢</p>
-						</div>
-						</div>
-					</div>
+                    {% endfor %}
+
 					<div class="pinglun_p">
 						<div class="_bottom">
 							<div class="n">
 							<a href="javacript:void(0)" class="a1"><span >首页</span></a>
+
 							<a href="javacript:void(0)" class="a1"  style="width:35px"><span >1</span></a>
-							<a href="javacript:void(0)" class="a1"  style="width:35px"><span >2</span></a>
-							<a href="javacript:void(0)" class="a1"  style="width:35px"><span >3</span></a>
-							<a href="javacript:void(0)" class="a1" style="width:35px"><span>4</span></a>
 							<a href="javacript:void(0)" class="a1"><span >尾页</span></a>
 							</div>
 						</div>

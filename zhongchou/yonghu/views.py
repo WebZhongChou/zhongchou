@@ -9,7 +9,7 @@ from django.contrib.sessions.backends.db import SessionStore
 def zhuce(request):
     if request.method == 'GET':
         Username = request.GET.get('usernamesignup')
-        Password = request.GET.get('passwordsignup')
+        Password = request.POST.get('passwordsignup')
         user = Users.objects.filter(Username = Username)
 
         if user:
@@ -75,20 +75,29 @@ def raisePublicForm(request):
         except Exception,e:
             return HttpResponseRedirect('/index#')
         return HttpResponseRedirect('/index#')
-def showPublicList(request):
-    if request.method == 'GET':
-        chanpinList = []
-        UserID = request.GET.get('userID')
-        chanpins = Chanpin.objects.order_by("-hasSale")[:10]
-        for chanpin in chanpins:
-            data = {"ChanpinID":chanpin.ChanPinID,"Name":chanpin.Name,"picture":chanpin.picture,"hasComplete":(chanpin.hasSale/chanpin.Price)*100,"lastTime":chanpin.DueTime-date.today()}
-            chanpinList.append(data)
-        context = {"data":data}
-        return render(request, 'yonghu/index.html',context)
+
 def getPublic(request):
     if request.method == 'GET':
         ChanpinID = request.GET.get('chanpinID')
+        commentNum = 0
+        pinglunList = []
         try:
+            pingluns = Pinglun.objects.filter(ChanPinID = ChanpinID)
+            commentNum = len(pingluns)
+
+            for pinglun in pingluns:
+                data = {}
+                userID = pinglun.UserID
+                user = Users.objects.filter(UserID = userID)
+                username = user[0].Username
+                data['username'] = username
+                data['content']=  pinglun.Content
+                data['time']=  pinglun.Time.replace(tzinfo=None)
+                pinglunList.append(data)
+        except Exception,e:
+            print e
+        try:
+
             chanpin = Chanpin.objects.get(ChanPinID = ChanpinID)
             name = chanpin.Name
             picture = chanpin.picture
@@ -106,7 +115,7 @@ def getPublic(request):
             hasSale = chanpin.hasSale
             createTime = chanpin.CreateTime
             dueTime = chanpin.DueTime
-            context = {"chanpinID":ChanpinID,"name":name,"picture":picture,"jieshao":jieshao,"taocanName_1":taocanName_1,"taocanPrice_1":taocanPrice_1,"taocanjianjie_1":taocanjianjie_1,"taocanName_2":taocanName_2,"taocanPrice_2":taocanPrice_2,"taocanjianjie_2":taocanjianjie_2,"taocanName_3":taocanName_3,"taocanPrice_3":taocanPrice_3,"taocanjianjie_3":taocanjianjie_3,"price":price,"hasSale":hasSale,"createTime":createTime,"dueTime":dueTime}
+            context = {"pinglunList":pinglunList,"commentNum":commentNum,"chanpinID":ChanpinID,"name":name,"picture":picture,"jieshao":jieshao,"taocanName_1":taocanName_1,"taocanPrice_1":taocanPrice_1,"taocanjianjie_1":taocanjianjie_1,"taocanName_2":taocanName_2,"taocanPrice_2":taocanPrice_2,"taocanjianjie_2":taocanjianjie_2,"taocanName_3":taocanName_3,"taocanPrice_3":taocanPrice_3,"taocanjianjie_3":taocanjianjie_3,"price":price,"hasSale":hasSale,"createTime":createTime,"dueTime":dueTime}
         except Exception,e:
             return HttpResponseRedirect('/index#id')
         return render(request, 'yonghu/goods.html',context)
@@ -137,20 +146,6 @@ def buyPublic(request):
         except Exception,e:
             return HttpResponseRedirect('/index#id123')
     return HttpResponseRedirect('/index#id')
-def showBuy(request):
-    if request.method == 'GET':
-        UserID = request.GET.get('userID')
-        publics = buyChanpin.objects.filter(UserID=UserID)
-        data = []
-        context = {}
-        pub = {}
-        for public in publics:
-            pub["ID"] = public.ChanPinID
-            pub["Name"] = public.ChanpinName
-            pub["price"] = public.price
-            data.append(public)
-        context = {"data":data,"UserID":UserID}
-    return render(request, 'yonghu/index.html',context)
 
 def comment(request):
     if request.method == 'GET':
@@ -159,3 +154,9 @@ def comment(request):
         content = request.GET.get('content')
         if UserID == None:
             return HttpResponseRedirect('/index#tologin')
+        try:
+            newcomment = Pinglun(UserID=UserID,ChanPinID = ChanpinID,Content=content,Time=datetime.now())
+            newcomment.save()
+        except Exception,e:
+            return HttpResponseRedirect('/index#id123')
+    return HttpResponseRedirect('/getPublic?chanpinID='+str(ChanpinID))

@@ -14,9 +14,9 @@ urlpatterns = patterns('',
     url(r'^raisePublic/$', views.raisePublic, name="raisePublic"),
     url(r'^raisePublicForm/$', views.raisePublicForm, name="raisePublicForm"),
     url(r'^getPublic/$', views.getPublic, name="getPublic"),
-    url(r'^showPublicList/$', views.showPublicList, name="showPublicList"),
+    #url(r'^showPublicList/$', views.showPublicList, name="showPublicList"),
     url(r'^buyPublic/$', views.buyPublic, name="buyPublic"),
-    url(r'^showBuy/$', views.showBuy, name="showBuy"),
-    url(r'^showBuy/$', views.showBuy, name="showBuy"),
-    url(r'^comment/$', views.comment, name="comment"),
+    #url(r'^showBuy/$', views.showBuy, name="showBuy"),
+    #url(r'^showBuy/$', views.showBuy, name="showBuy"),
+    url(r'^comment/$', views.comment, name="comment")
 )
