@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from models import *
 from django.template import loader
 from datetime import *
+from django.http import HttpResponseRedirect
+from django.contrib.sessions.backends.db import SessionStore
 # Create your views here.
 def zhuce(request):
     if request.method == 'GET':
@@ -18,38 +20,142 @@ def zhuce(request):
             return render(request, 'yonghu/index.html')
         #TouXiang = request.POST.get('',null)
         
-        #return render(request, 'yonghu/index.html#toregister')
+        #return renderS(request, 'yonghu/index.html#toregister')
 def index(request):
-    chanpins = Chanpin.objects.order_by('-hasSale')[:10]
-    context = {'chanpins':chanpins,'nowTime':date.today()}
+    chanpinList = []
+    chanpins = Chanpin.objects.order_by("-hasSale")[:10]
+    for chanpin in chanpins:
+        data = {"ChanpinID":chanpin.ChanPinID,"hasSale":chanpin.hasSale,"Name":chanpin.Name,"picture":chanpin.picture,"hasComplete":(chanpin.hasSale/chanpin.Price)*100,"lastTime":(chanpin.DueTime.replace(tzinfo=None)-datetime.today().replace(tzinfo=None)).days}
+        chanpinList.append(data)
+    context = {"data":chanpinList}
     return render(request, 'yonghu/index.html',context)
 def denglu(request):
     if request.method == 'GET':
         Username = request.GET.get('username')
         Password = request.GET.get('password')
         users = Users.objects.filter(Username = Username)
-        if users[0].Password == Password:
-            return render(request, 'yonghu/index.html')
-    return render(request, 'yonghu/index.html')
+        try:
+            if users[0].Password == Password:
+                userID = users[0].UserID
+                request.session["userID"] = userID
+                return HttpResponseRedirect('/index#')
+        except Exception,e:
+            return HttpResponseRedirect('/index#')
+    return HttpResponseRedirect('/index#')
 def raisePublic(request):
-    return render(request, 'yonghu/raisePublic.html')
+    if request.method == 'GET':
+        UserID  = request.session.get("userID",None)
+        if UserID == None:
+            return HttpResponseRedirect('/index#tologin')
+        return render(request, 'yonghu/raisePublic.html')
 def raisePublicForm(request):
     if request.method == 'GET':
-        Name = request.GET.get('usernamesignup')
-        jieshao = request.GET.get('jieshao')
-        TaocanName_1 = request.GET.get('taocanName_1')
-        TaocanPrice_1 = request.GET.get('taocanPrice_1')
-        Taocanjianjie_1 = request.GET.get('taocanContent_1')
-        TaocanName_2 = request.GET.get('taocanName_2')
-        TaocanPrice_2 = request.GET.get('taocanPrice_2')
-        Taocanjianjie_2 = request.GET.get('taocanContent_2')
-        TaocanName_3 = request.GET.get('taocanName_3')
-        TaocanPrice_3 = request.GET.get('taocanPrice_3')
-        Taocanjianjie_3 = request.GET.get('taocanContent_3')
-        Price = request.GET.get('price')
-        CreateTime = date.today()
-        delta = timedelta(days=100)
-        DueTime = CreateTime + delta
-        chanpin = Chanpin(DueTime = DueTime,CreateTime = CreateTime,Name = Name,jieshao = jieshao,TaocanName_1 = TaocanName_1,TaocanPrice_1 = TaocanPrice_1,Taocanjianjie_1 = Taocanjianjie_1,TaocanName_2 = TaocanName_2,TaocanPrice_2 = TaocanPrice_2,Taocanjianjie_2 = Taocanjianjie_2,TaocanName_3 = TaocanName_3,TaocanPrice_3 = TaocanPrice_3,Taocanjianjie_3 = Taocanjianjie_3,Price= Price)
-        chanpin.save()
-        return render(request, 'yonghu/index.html')
+        context= {}
+        try:
+            Name = request.GET.get('usernamesignup')
+            jieshao = request.GET.get('jieshao')
+            UserID  = request.session.get("userID",None)
+            if UserID == None:
+                return HttpResponseRedirect('/index#tologin')
+            TaocanName_1 = request.GET.get('taocanName_1')
+            TaocanPrice_1 = request.GET.get('taocanPrice_1')
+            Taocanjianjie_1 = request.GET.get('taocanContent_1')
+            TaocanName_2 = request.GET.get('taocanName_2')
+            TaocanPrice_2 = request.GET.get('taocanPrice_2')
+            Taocanjianjie_2 = request.GET.get('taocanContent_2')
+            TaocanName_3 = request.GET.get('taocanName_3')
+            TaocanPrice_3 = request.GET.get('taocanPrice_3')
+            Taocanjianjie_3 = request.GET.get('taocanContent_3')
+            Price = request.GET.get('price')
+            CreateTime = date.today()
+            delta = timedelta(days=100)
+            DueTime = CreateTime + delta
+            chanpin = Chanpin(hasSale=0,UserID= UserID,DueTime = DueTime,CreateTime = CreateTime,Name = Name,jieshao = jieshao,TaocanName_1 = TaocanName_1,TaocanPrice_1 = TaocanPrice_1,Taocanjianjie_1 = Taocanjianjie_1,TaocanName_2 = TaocanName_2,TaocanPrice_2 = TaocanPrice_2,Taocanjianjie_2 = Taocanjianjie_2,TaocanName_3 = TaocanName_3,TaocanPrice_3 = TaocanPrice_3,Taocanjianjie_3 = Taocanjianjie_3,Price= Price)
+            chanpin.save()
+        except Exception,e:
+            return HttpResponseRedirect('/index#')
+        return HttpResponseRedirect('/index#')
+def showPublicList(request):
+    if request.method == 'GET':
+        chanpinList = []
+        UserID = request.GET.get('userID')
+        chanpins = Chanpin.objects.order_by("-hasSale")[:10]
+        for chanpin in chanpins:
+            data = {"ChanpinID":chanpin.ChanPinID,"Name":chanpin.Name,"picture":chanpin.picture,"hasComplete":(chanpin.hasSale/chanpin.Price)*100,"lastTime":chanpin.DueTime-date.today()}
+            chanpinList.append(data)
+        context = {"data":data}
+        return render(request, 'yonghu/index.html',context)
+def getPublic(request):
+    if request.method == 'GET':
+        ChanpinID = request.GET.get('chanpinID')
+        try:
+            chanpin = Chanpin.objects.get(ChanPinID = ChanpinID)
+            name = chanpin.Name
+            picture = chanpin.picture
+            jieshao = chanpin.jieshao
+            taocanName_1 = chanpin.TaocanName_1
+            taocanPrice_1 = chanpin.TaocanPrice_1
+            taocanjianjie_1 = chanpin.Taocanjianjie_1
+            taocanName_2 = chanpin.TaocanName_2
+            taocanPrice_2 = chanpin.TaocanPrice_2
+            taocanjianjie_2 = chanpin.Taocanjianjie_2
+            taocanName_3 = chanpin.Taocanjianjie_3
+            taocanPrice_3 = chanpin.TaocanPrice_3
+            taocanjianjie_3 = chanpin.Taocanjianjie_3
+            price = chanpin.Price
+            hasSale = chanpin.hasSale
+            createTime = chanpin.CreateTime
+            dueTime = chanpin.DueTime
+            context = {"chanpinID":ChanpinID,"name":name,"picture":picture,"jieshao":jieshao,"taocanName_1":taocanName_1,"taocanPrice_1":taocanPrice_1,"taocanjianjie_1":taocanjianjie_1,"taocanName_2":taocanName_2,"taocanPrice_2":taocanPrice_2,"taocanjianjie_2":taocanjianjie_2,"taocanName_3":taocanName_3,"taocanPrice_3":taocanPrice_3,"taocanjianjie_3":taocanjianjie_3,"price":price,"hasSale":hasSale,"createTime":createTime,"dueTime":dueTime}
+        except Exception,e:
+            return HttpResponseRedirect('/index#id')
+        return render(request, 'yonghu/goods.html',context)
+def buyPublic(request):
+    if request.method == 'GET':
+        ChanpinID = request.GET.get('chanpinID')
+        taocan = request.GET.get('taocan')
+        UserID  = request.session.get("userID",None)
+        if UserID == None:
+            return HttpResponseRedirect('/index#tologin')
+        chanpin = Chanpin.objects.get(ChanPinID = ChanpinID)
+        ChanpinName = chanpin.Name
+        sale = 0
+        if int(taocan)  ==1:
+            sale = chanpin.TaocanPrice_1
+        elif int(taocan) ==2:
+            sale = chanpin.TaocanPrice_2
+        else:
+            sale = chanpin.TaocanPrice_3
+        try:
+            if chanpin.hasSale + sale < chanpin.Price:
+                chanpin.hasSale = chanpin.hasSale+sale
+                chanpin.save()
+                newBuychanpin = buyChanpin(ChanpinName=ChanpinName,ChanpinID=ChanpinID,UserID=UserID,price=sale)
+                newBuychanpin.save()
+
+                return HttpResponseRedirect('/index#id456')
+        except Exception,e:
+            return HttpResponseRedirect('/index#id123')
+    return HttpResponseRedirect('/index#id')
+def showBuy(request):
+    if request.method == 'GET':
+        UserID = request.GET.get('userID')
+        publics = buyChanpin.objects.filter(UserID=UserID)
+        data = []
+        context = {}
+        pub = {}
+        for public in publics:
+            pub["ID"] = public.ChanPinID
+            pub["Name"] = public.ChanpinName
+            pub["price"] = public.price
+            data.append(public)
+        context = {"data":data,"UserID":UserID}
+    return render(request, 'yonghu/index.html',context)
+
+def comment(request):
+    if request.method == 'GET':
+        ChanpinID = request.GET.get('chanpinID')
+        UserID  = request.session.get("userID",None)
+        content = request.GET.get('content')
+        if UserID == None:
+            return HttpResponseRedirect('/index#tologin')

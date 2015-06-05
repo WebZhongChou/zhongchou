@@ -22,7 +22,7 @@
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                            <form  action="/denglu" autocomplete="on"> 
+                            <form  action="/denglu" autocomplete="on" method = "get"> 
                                 <h1>登陆</h1> 
                                 <p> 
                                     <label for="username" class="uname" data-icon="u" >用户名</label>
@@ -47,16 +47,16 @@
                         </div>
 
                         <div id="register" class="animate form">
-                            <form  action="/zhuce" autocomplete="on"> 
+                            <form  action="/zhuce" autocomplete="on" method = "get"> 
                                 <h1> 注册 </h1> 
                                 <p> 
                                     <label for="usernamesignup" class="uname" data-icon="u">你的用户名</label>
-                                    <input id="usernamesignup" name="usernamesignup" required="required" type="text" style="padding: 10px 5px 10px 32px;"/>
+                                    <input id="usernamesignup" name="username" required="required" type="text" style="padding: 10px 5px 10px 32px;"/>
                                 </p>
                                
                                 <p> 
                                     <label for="passwordsignup" class="youpasswd" data-icon="p">你的密码 </label>
-                                    <input id="passwordsignup" name="passwordsignup" required="required" type="password" style="padding: 10px 5px 10px 32px;"/>
+                                    <input id="passwordsignup" name="password" required="required" type="password" style="padding: 10px 5px 10px 32px;"/>
                                 </p>
                                 <p> 
                                     <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">请确认密码 </label>
@@ -132,11 +132,9 @@
 				</ul>
 			</div>
 			<div class="m-main">
-                {% for chanpin in chanpins%}
-                {{ withratio chanpin.hasSale chanpin.Price 100 }}
-
+                {% for chanpin in data%}
 				<div class="m-part">
-					<a href="/goods"><div class="partone">
+					<a href="/getPublic?chanpinID={{chanpin.ChanpinID}}"><div class="partone">
 					</div>
 					</a>
 					<div class="parttwo">
@@ -145,115 +143,11 @@
 					<div class="partthree">
 						<span class="ftone">已筹资</span><span class="fttwo">￥{{chanpin.hasSale}}</span>
 						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree"{{percent}}%</span><span class="ftone ftfour">剩余{{ chanpin.DueTime |add: -nowTime}}天</span>
+						<span class="fttwo ftthree"{{chanpin.hasComplete}}%</span><span class="ftone ftfour">剩余{{ chanpin.lastTime}}天</span>
 					</div>
 				</div>
                 {%endfor%}
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-				<div class="m-part">
-					<a href="javacript:void(0)"><div class="partone">
-					</div>
-					</a>
-					<div class="parttwo">
-						<a  href="javacript:void(0)"><span class="ptt">GEEKERY无线运动激励耳机——美国队长经典复刻版</span></a>
-					</div>
-					<div class="partthree">
-						<span class="ftone">已筹资</span><span class="fttwo">￥113,522</span>
-						<div class="jdt"><div class="jd"></div></div>
-						<span class="fttwo ftthree">80%</span><span class="ftone ftfour">剩余32天</span>
-					</div>
-				</div>
-			</div>
+				
 		</div>
 	</div>
 	<div class="bl">

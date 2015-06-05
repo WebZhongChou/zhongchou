@@ -5,7 +5,7 @@ class Users(models.Model):#账户表
     UserID = models.AutoField(primary_key=True)
     Username = models.CharField(max_length=15)
     Password = models.CharField(max_length=15)
-    TouXiang = models.CharField(max_length=50)
+    #TouXiang = models.CharField(max_length=50)
     #一个人拥有一个产品库表ChanPinTable_ID，记录他发布的产品
     #test = models.CharField(max_length=15,null=True)
     def __unicode__(self):
@@ -13,6 +13,7 @@ class Users(models.Model):#账户表
 
 class Chanpin(models.Model):
     ChanPinID = models.AutoField(primary_key=True)
+    UserID = models.IntegerField(max_length=15)
     Name = models.CharField(max_length=15)
     picture = models.CharField(max_length=50)
     jieshao = models.TextField()
@@ -29,6 +30,16 @@ class Chanpin(models.Model):
     hasSale = models.FloatField()
     CreateTime = models.DateTimeField(default=datetime.datetime.now)
     DueTime = models.DateTimeField()
-    #一个产品具有一张评论表
+class pinglun(models.Model):
+    PingLunID = models.AutoField(primary_key=True)
+    UserID = models.IntegerField(max_length=15)
+    ChanPinID = models.IntegerField(max_length=15)
+    Content = models.TextField(null=True)
+    Time = models.DateTimeField()
     def __unicode__(self):
         return self.Name
+class buyChanpin(models.Model):
+    UserID = models.IntegerField(max_length=15)
+    ChanpinID = models.IntegerField(max_length=15)
+    ChanpinName = models.CharField(max_length=15)
+    price = models.IntegerField(max_length=15)

@@ -31,9 +31,10 @@
                        
 
                         <div id="login" class="animate form">
-                           <form  action="/raisePublicForm" autocomplete="on">
+                           <form  action="/raisePublicForm" method="get" autocomplete="on">
                                 <h1> 发起众筹 </h1> 
                                 <p> 
+                                  <input type="hidden" name="userID" id="test" value="{{UserID}}" />
                                     <label for="usernamesignup" class="uname" >众筹项目名称</label>
                                     <input id="usernamesignup" name="usernamesignup" required="required" type="text" />
                                 </p>

@@ -1,27 +1,28 @@
-﻿<!DOCTYPE html>
+﻿{% load staticfiles %}
+<!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/main.css"/>
+<link rel="stylesheet" type="text/css" href="{% static 'yonghu/css/main.css' %}"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 <meta name="description" content="Login and Registration Form with HTML5 and CSS3" />
 <meta name="keywords" content="html5, css3, form, switch, animation, :target, pseudo-class" />
 <meta name="author" content="Codrops" />
 <link rel="shortcut icon" href="../favicon.ico"> 
-<link rel="stylesheet" type="text/css" href="css/demo.css" />
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
+<link rel="stylesheet" type="text/css" href="{% static 'yonghu/css/demo.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'yonghu/css/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'yonghu/css/animate-custom.css' %}" />
 <meta  http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="{% static 'yonghu/js/main.js' %}"></script>
+<script type="text/javascript" src="{% static 'yonghu/js/jquery-2.1.1.min.js' %}"></script>
 </head>
 <body>
 	<div id="regisAndlogin">
-					<a href="javascript:void(0);" onclick="change();"><img src="images/back.png"/></a>
+					<a href="javascript:void(0);" onclick="change();"><img src="{% static 'yonghu/images/back.png' %}"/></a>
 		    		<a class="hiddenanchor" id="toregister"></a>
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                            <form  action="mysuperscript.php" autocomplete="on"> 
+                            <form  action="/denglu" autocomplete="on">
                                 <h1>登陆</h1> 
                                 <p> 
                                     <label for="username" class="uname" data-icon="u" >用户名</label>
@@ -46,7 +47,7 @@
                         </div>
 
                         <div id="register" class="animate form">
-                            <form  action="mysuperscript.php" autocomplete="on"> 
+                            <form  action="/zhuce" autocomplete="on">
                                 <h1> 注册 </h1> 
                                 <p> 
                                     <label for="usernamesignup" class="uname" data-icon="u">你的用户名</label>
@@ -77,15 +78,15 @@
 	<div id="ttou">
 	<div id="header" class="h1">
 		<div class="logo">
-			<a href="index.html">
+			<a href="/index">
 				
 				<div class="logo_font">悠然众筹</div>
 			</a>
 		</div>
 		<div class="hr">
 			<ul class="hu">
-				<a href="raisePublic.html" ><li class="hl" >发起众筹</li></a>
-				<a href="#sp"><li class="hl">众筹商品</li></a>
+				<a href="/raisePublic" ><li class="hl" >发起众筹</li></a>
+				<a href="/index"><li class="hl">众筹商品</li></a>
 			</ul>
 			<form>
 			<div class="header_findP" >
@@ -108,22 +109,22 @@
 		<div class="js_fenxiang"></div>
 		</div>
 		<div class="js_left">
-		<div class="js_m">GEEKERY无线运动激励耳机——美国队长经典复刻版</div>
-		<div class="js_z">我们是一群热爱运动，热爱音乐，热爱科技的小伙伴，我们希望用这三者让你我的生活更加美好和有趣。给大家带来这款无线运动激励耳机，美国队长经典复刻版。</div>
+		<div class="js_m">{{name}}</div>
+		<div class="js_z">{{jieshao}}</div>
 		<div class="js_one">
-			<p class="js_wd">英雄超值档：</p>
-			<p class="js_wd">感谢您对我们的支持！您将以抢鲜价得到我们的无线运动激励耳机（美国队长经典复刻版）1个。</p>
-			<a href="#" class="a jg" ><span class="b">支持¥329</span></a>
+			<p class="js_wd">{{ taocanName_1 }}：</p>
+			<p class="js_wd">{{ taocanjianjie_1 }}</p>
+			<a href="/buyPublic?taocan=1&chanpinID={{ chanpinID }}" class="a jg" ><span class="b">支持¥{{ taocanPrice_1 }}</span></a>
 		</div>
 		<div class="js_one">
-			<p class="js_wd">英雄队友档：</p>
-			<p class="js_wd">感谢您对我们的支持！您将以抢鲜价得到我们的无线运动激励耳机（美国队长经典复刻版）2个。</p>
-			<a href="#" class="a jg"><span class="b">支持¥649</span></a>
+			<p class="js_wd">{{ taocanName_2 }}：</p>
+			<p class="js_wd">{{ taocanjianjie_2 }}</p>
+			<a href="/buyPublic?taocan=2&chanpinID={{ chanpinID }}" class="a jg"><span class="b">支持¥{{ taocanPrice_2 }}</span></a>
 		</div>
 		<div class="js_one">
-			<p class="js_wd">英雄集结档：</p>
-			<p class="js_wd">感谢您对我们的支持！您将以抢鲜价得到我们的无线运动激励耳机（美国队长经典复刻版）30个。</p>
-			<a href="#" class="a jg" ><span class="b">支持¥9699</span></a>
+			<p class="js_wd">{{ taocanName_3 }}：</p>
+			<p class="js_wd">{{ taocanjianjie_3 }}</p>
+			<a href="/buyPublic?taocan=3&chanpinID={{ chanpinID }}" class="a jg" ><span class="b">支持{{ taocanPrice_3 }}</span></a>
 		</div>
 		<div class="js_more"><a href="#" class="a genduo"><span class="b">更多</span></a></div>
 		</div>
@@ -138,8 +139,11 @@
 				</div>
 				<div class="pinglun_main">
 					<div class="pinglun_p pp">
+                        <form action="form_action.asp" method="get">
 						<textarea class="ptext"></textarea>
-						<a href="javacript:void(0)" class="aa"><span class="bb">发表回复</span></a>
+						<a href="/comment" class="aa"><span class="bb">发表回复</span></a>
+                             <input type="submit" value="发表回复" />
+                        </form>
 					</div>
 					<br/>
 					<div class="pinglun_p">
