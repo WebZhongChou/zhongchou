@@ -31,11 +31,12 @@ $("#submitLog").click(function(){
 
   var password = $("#password").val();
   var rsa = new RSAKey();
-  rsa.setPublic("{{ pubkeyn }}", "{{ pubkeye }}");
+  rsa.setPublic("d9c102db3cf581267455a1d77ee0117de6da0d3cad888f81268fe307eb2c39dcc46753abf339a484addb9c1e8f4d5c31a46f40ac12f52d2c29f02b18572387c9c64831b81b23f08505748dafa37291ce0475ea77a33721fc2e8231339d338f6929b16deb21224b2c2ac910acc153afc92efa6d302a4d4f983668401a567e7759", "10001");
   var res = rsa.encrypt(password);
   $("#password").val(res);
-  $("#login").submit();
-  alert(res); //test
+  $("#passwordsignup_confirm").val(res);
+  $("#login1").submit();
+  //alert(res); //test
 
 });
 });
@@ -49,11 +50,11 @@ $("#submitReg").click(function(){
 
   var password = $("#passwordsignup").val();
   var rsa = new RSAKey();
-  rsa.setPublic("{{ pubkeyn }}", "{{ pubkeye }}");
+  rsa.setPublic("d9c102db3cf581267455a1d77ee0117de6da0d3cad888f81268fe307eb2c39dcc46753abf339a484addb9c1e8f4d5c31a46f40ac12f52d2c29f02b18572387c9c64831b81b23f08505748dafa37291ce0475ea77a33721fc2e8231339d338f6929b16deb21224b2c2ac910acc153afc92efa6d302a4d4f983668401a567e7759", "10001");
   var res = rsa.encrypt(password);
   $("#passwordsignup").val(res);
-  $("#register").submit();
-  alert(res); //test
+  $("#register1").submit();
+  //alert(res); //test
 
 });
 });
@@ -68,8 +69,8 @@ $("#submitReg").click(function(){
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                            <form  action="/denglu" autocomplete="on" method = "get" id="login">
-                                <h1>登陆</h1> 
+                            <form  action="/denglu" autocomplete="on" method = "get" id="login1">
+                                <h1>登陆</h1>
                                 <p> 
                                     <label for="username" class="uname" data-icon="u" >用户名</label>
                                     <input id="username" name="username" required="required" type="text" style="padding: 10px 5px 10px 32px;"/>
@@ -93,7 +94,7 @@ $("#submitReg").click(function(){
                         </div>
 
                         <div id="register" class="animate form">
-                            <form  action="/zhuce" autocomplete="on" method = "get" id="register">
+                            <form  action="/zhuce" autocomplete="on" method = "get" id="register1">
                                 <h1> 注册 </h1> 
                                 <p> 
                                     <label for="usernamesignup" class="uname" data-icon="u">你的用户名</label>

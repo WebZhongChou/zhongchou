@@ -15,7 +15,7 @@ from django.contrib.sessions.backends.db import SessionStore
 def zhuce(request):
     if request.method == 'GET':
         Username = request.GET.get('usernamesignup')
-        Password = request.POST.get('passwordsignup')
+        Password = request.GET.get('passwordsignup')
         user = Users.objects.filter(Username = Username)
         if user:
             return render(request, 'yonghu/index.html')
@@ -32,17 +32,15 @@ def index(request):
             p = publickfile.read()
             pubkey = rsa.PublicKey.load_pkcs1(p)
             #request.session["pubkey"] = pubkey
-    message = "a"
-    crypto = rsa.encrypt(message, pubkey)
-    print crypto
+
     chanpins = Chanpin.objects.order_by("-hasSale")[:10]
     for chanpin in chanpins:
 
         data = {"ChanpinID":chanpin.ChanPinID,"hasSale":chanpin.hasSale,"Name":chanpin.Name,"picture":chanpin.picture,"hasComplete":(chanpin.hasSale/chanpin.Price)*100,"lastTime":(chanpin.DueTime.replace(tzinfo=None)-datetime.today().replace(tzinfo=None)).days}
         chanpinList.append(data)
     n = '%x' % pubkey.n
-    e  = '%x' % pubkey.e
-    context = {"crypto":crypto,"data":chanpinList,"pubkeye":e,"pubkeyn":n}
+    e = '%x' % pubkey.e
+    context = {"data":chanpinList,"pubkeye":e,"pubkeyn":n}
     return render(request, 'yonghu/index.html',context)
 def denglu(request):
     if request.method == 'GET':

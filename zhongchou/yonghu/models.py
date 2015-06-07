@@ -4,7 +4,7 @@ import datetime
 class Users(models.Model):#账户表
     UserID = models.AutoField(primary_key=True)
     Username = models.CharField(max_length=15)
-    Password = models.CharField(max_length=15)
+    Password = models.CharField(max_length=1024)
     #TouXiang = models.CharField(max_length=50)
     #一个人拥有一个产品库表ChanPinTable_ID，记录他发布的产品
     #test = models.CharField(max_length=15,null=True)
