@@ -4,6 +4,12 @@ from models import *
 from django.template import loader
 from datetime import *
 from django.http import HttpResponseRedirect
+import rsa
+from Crypto.Cipher import PKCS1_v1_5
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA
+from Crypto import Random
+import re
 from django.contrib.sessions.backends.db import SessionStore
 # Create your views here.
 def zhuce(request):
@@ -11,7 +17,6 @@ def zhuce(request):
         Username = request.GET.get('usernamesignup')
         Password = request.POST.get('passwordsignup')
         user = Users.objects.filter(Username = Username)
-
         if user:
             return render(request, 'yonghu/index.html')
         else:
@@ -23,19 +28,37 @@ def zhuce(request):
         #return renderS(request, 'yonghu/index.html#toregister')
 def index(request):
     chanpinList = []
+    with open('public.pem') as publickfile:
+            p = publickfile.read()
+            pubkey = rsa.PublicKey.load_pkcs1(p)
+            #request.session["pubkey"] = pubkey
+    message = "a"
+    crypto = rsa.encrypt(message, pubkey)
+    print crypto
     chanpins = Chanpin.objects.order_by("-hasSale")[:10]
     for chanpin in chanpins:
+
         data = {"ChanpinID":chanpin.ChanPinID,"hasSale":chanpin.hasSale,"Name":chanpin.Name,"picture":chanpin.picture,"hasComplete":(chanpin.hasSale/chanpin.Price)*100,"lastTime":(chanpin.DueTime.replace(tzinfo=None)-datetime.today().replace(tzinfo=None)).days}
         chanpinList.append(data)
-    context = {"data":chanpinList}
+    n = '%x' % pubkey.n
+    e  = '%x' % pubkey.e
+    context = {"crypto":crypto,"data":chanpinList,"pubkeye":e,"pubkeyn":n}
     return render(request, 'yonghu/index.html',context)
 def denglu(request):
     if request.method == 'GET':
         Username = request.GET.get('username')
         Password = request.GET.get('password')
-        users = Users.objects.filter(Username = Username)
+
+
+
         try:
-            if users[0].Password == Password:
+            users = Users.objects.filter(Username = Username)
+            DataBasePass = users[0].Password
+            mk = open('private.pem','r')
+            privkey = RSA.importKey(mk.read())
+            ciphertext = ''.join([chr(int(x, 16)) for x in re.findall(r'\w\w', DataBasePass)])
+            plaintext = rsa.decrypt(ciphertext, privkey)
+            if plaintext == Password:
                 userID = users[0].UserID
                 request.session["userID"] = userID
                 return HttpResponseRedirect('/index#')
@@ -68,9 +91,11 @@ def raisePublicForm(request):
             Taocanjianjie_3 = request.GET.get('taocanContent_3')
             Price = request.GET.get('price')
             CreateTime = date.today()
+            picture = request.GET.get('picture')
+
             delta = timedelta(days=100)
             DueTime = CreateTime + delta
-            chanpin = Chanpin(hasSale=0,UserID= UserID,DueTime = DueTime,CreateTime = CreateTime,Name = Name,jieshao = jieshao,TaocanName_1 = TaocanName_1,TaocanPrice_1 = TaocanPrice_1,Taocanjianjie_1 = Taocanjianjie_1,TaocanName_2 = TaocanName_2,TaocanPrice_2 = TaocanPrice_2,Taocanjianjie_2 = Taocanjianjie_2,TaocanName_3 = TaocanName_3,TaocanPrice_3 = TaocanPrice_3,Taocanjianjie_3 = Taocanjianjie_3,Price= Price)
+            chanpin = Chanpin(picture= picture,hasSale=0,UserID= UserID,DueTime = DueTime,CreateTime = CreateTime,Name = Name,jieshao = jieshao,TaocanName_1 = TaocanName_1,TaocanPrice_1 = TaocanPrice_1,Taocanjianjie_1 = Taocanjianjie_1,TaocanName_2 = TaocanName_2,TaocanPrice_2 = TaocanPrice_2,Taocanjianjie_2 = Taocanjianjie_2,TaocanName_3 = TaocanName_3,TaocanPrice_3 = TaocanPrice_3,Taocanjianjie_3 = Taocanjianjie_3,Price= Price)
             chanpin.save()
         except Exception,e:
             return HttpResponseRedirect('/index#')
