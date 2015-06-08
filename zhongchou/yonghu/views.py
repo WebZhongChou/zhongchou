@@ -5,8 +5,8 @@ from django.template import loader
 from datetime import *
 from django.http import HttpResponseRedirect
 import rsa
-from Crypto.Cipher import PKCS1_v1_5
-from Crypto.PublicKey import RSA
+#from Crypto.Cipher import PKCS1_v1_5
+#from Crypto.PublicKey import RSA
 from Crypto.Hash import SHA
 from Crypto import Random
 import re
@@ -56,6 +56,7 @@ def denglu(request):
             privkey = RSA.importKey(mk.read())
             ciphertext = ''.join([chr(int(x, 16)) for x in re.findall(r'\w\w', DataBasePass)])
             plaintext = rsa.decrypt(ciphertext, privkey)
+            Password = rsa.decrypt(Password, privkey)
             if plaintext == Password:
                 userID = users[0].UserID
                 request.session["userID"] = userID
